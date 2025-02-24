@@ -2,8 +2,17 @@
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\AnnonceController;
+use App\Http\Controllers\CommentController;
+
 
 use Illuminate\Support\Facades\Route;
+
+enum Section : string{
+    case phone ="phone";
+    case laptop ="laptop";
+    case computer ="computer";
+}
 
 Route::get('/', function () {
     return view('welcome');
@@ -34,17 +43,36 @@ Route::middleware('auth')->group(function () {
 });
 
 
-// Route::get('testing', function() {return view('categories.create');});
+Route::get('testing', function() {return view('categories.create');});
 
 //this is a way to group many routes related to a certain controller
 Route::controller(CategoryController::class)->group(function(){
-    Route::get("hello","index");
-    Route::get("category/create","create");
+    Route::get("category/hello","index");
+    Route::get("category/cr","create");
 });
 
-//Actuall project routs ---------------------------
+//this is the way you used to do in the event brite project with native php
+Route::get("testa", [CategoryController::class, 'index']);
+
+// //to make subdomain routes
+// Route::domain('{account}.weekly')->group(function($account){
+//     Route::get('example','index');
+// });
+
+//to give a route a specific routes like : products/?, dik "?" ghankhliwha t9bel ghir chi valeurs mo7adadin o ila khrjna 3lihom o ktbna haja akhra ghay3tina 404;
+Route:: get('products/{section}', function(Section $section){
+    $array=["hello","letsgo"];
+    dd($array) ;
+    return $section->value; // or the page view you want to show
+});
+
+
+//Actuall project routes ---------------------------
 
 Route::resource('categories', CategoryController::class);
+
+Route::resource('annonces', AnnonceController::class);
+Route::post('annonces/{annonce}/comments', [CommentController::class, 'store'])->name('comments.store');
 
 
 require __DIR__.'/auth.php';
