@@ -16,16 +16,26 @@
         <p class="mb-4"><strong>Status:</strong> {{ ucfirst($annonce->status) }}</p>
 
         <!-- Display Comments -->
-        <h2 class="text-xl font-bold mb-4">Comments</h2>
-        <ul>
-            @foreach ($annonce->comments as $comment)
-                <li class="mb-4 p-4 bg-white shadow rounded">
-                    <p class="mb-2"><strong>{{ $comment->user->name }}</strong> </p>
-                    <p>{{ $comment->content }}</p>
-                    <p class="text-sm text-gray-600">{{ $comment->created_at->diffForHumans() }}</p>
-                </li>
-            @endforeach
-        </ul>
+<h2 class="text-xl font-bold mb-4">Comments</h2>
+<ul>
+    @foreach ($annonce->comments as $comment)
+        <li class="mb-4 p-4 bg-white shadow rounded">
+            <p class="mb-2"><strong>{{ $comment->user->name }}</strong></p>
+            <p>{{ $comment->content }}</p>
+            <p class="text-sm text-gray-600">{{ $comment->created_at->diffForHumans() }}</p>
+
+            <!-- Check if the authenticated user is the owner of the comment -->
+            @if (Auth::id() === $comment->user_id)
+                <a href="{{ route('comments.edit', $comment->id) }}" class="bg-yellow-500 text-white px-4 py-2 rounded">Edit</a>
+                <form action="{{ route('comments.destroy', $comment->id) }}" method="POST" style="display:inline;">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" class="bg-red-500 text-white px-4 py-2 rounded">Delete</button>
+                </form>
+            @endif
+        </li>
+    @endforeach
+</ul>
 
         <!-- Add Comment Form -->
         <h2 class="text-xl font-bold mb-4 mt-8">Add a Comment</h2>

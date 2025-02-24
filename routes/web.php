@@ -72,7 +72,11 @@ Route:: get('products/{section}', function(Section $section){
 Route::resource('categories', CategoryController::class);
 
 Route::resource('annonces', AnnonceController::class);
+
 Route::post('annonces/{annonce}/comments', [CommentController::class, 'store'])->name('comments.store');
+Route::delete('/comments/{comment}', [CommentController::class, 'destroy'])->name('comments.destroy');
+Route::get('/comments/{comment}/edit', [CommentController::class, 'edit'])->name('comments.edit');
+Route::put('/comments/{comment}', [CommentController::class, 'update'])->name('comments.update');
 
 
 require __DIR__.'/auth.php';
